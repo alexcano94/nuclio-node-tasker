@@ -1,0 +1,20 @@
+{
+  "name": "small-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --ignore './*.json'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "finalhandler": "^1.1.2",
+    "lowdb": "^1.0.0",
+    "router": "^1.3.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
