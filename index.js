@@ -42,7 +42,7 @@ router.get('/task', (req, res) => {
 router.get('/task/:id', (req, res) => {
     const { id } = req.params;
     const tasks = db.get('tasks').value();
-    const task = tasks.filter((task) => { task.id === parseInt(id) });
+    const task = tasks.filter((task) => task.id === parseInt(id));
     if(task.length === 0) {
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(`{ "message": "Task with id: ${id} was not found "}`);
