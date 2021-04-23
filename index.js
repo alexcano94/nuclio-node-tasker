@@ -11,7 +11,7 @@ const FileSync = require('lowdb/adapters/FileSync')
 const adapter = new FileSync('db.json')
 const db = low(adapter)
 
-db.defaults({ tasks: {}, logs: [] }).write();
+db.defaults({ tasks: [], logs: [] }).write();
 
 const router = Router();
 
@@ -111,7 +111,7 @@ router.post('/task', (req, res) => {
 router.patch('/task/:id', (req, res) => {
     const { id } = req.params;
     const { data } = req.body;
-    
+
     entityExists('tasks', id, res);
     validateTask(taskPatchSchema, data, res);
 
