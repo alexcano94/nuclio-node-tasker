@@ -18,7 +18,7 @@ const router = Router();
 
 const entityExists = (entity, id, res) => {
     const task = db.get(entity)
-    .find({ id: parseInt(id) })
+    .find({ id: id })
     .value();
     if(!task) {
         res.writeHead(404, { 'Content-Type': 'application/json' });
@@ -30,7 +30,7 @@ const entityExists = (entity, id, res) => {
 
 const checkEntity = (entity, id) => {
     const task = db.get(entity)
-    .find({ id: parseInt(id) })
+    .find({ id: id })
     .value();
     return !!task;
 };
@@ -53,7 +53,7 @@ router.use((req, res, next) => {
 const taskCreateSchema = {
     type: "object",
     properties: {
-      id: {type: "number"},
+      id: {type: "string"},
       title: {type: "string"},
       completed: {type: "boolean"},
     },
@@ -116,7 +116,7 @@ router.patch('/task/:id', (req, res) => {
     validateTask(taskPatchSchema, data, res);
 
     db.get('tasks')
-    .find({ id: parseInt(id) })
+    .find({ id: id })
     .assign(data)
     .write()
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -132,7 +132,7 @@ router.put('/task/:id', (req, res) => {
     
 
     db.get('tasks')
-    .find({ id: parseInt(id) })
+    .find({ id: id })
     .assign(data)
     .write();
 
@@ -144,7 +144,7 @@ router.delete('/task/:id', (req, res) => {
     const { id } = req.params;
     entityExists('tasks', id, res);
     db.get('tasks')
-    .remove({ id: parseInt(id) })
+    .remove({ id: id })
     .write();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(`{ "message": "Task ${id} was deleted "}`);
@@ -163,7 +163,19 @@ router.get('/task/:id', (req, res) => {
     res.end(JSON.stringify(task));
 });
 
+router.post('/task/clearcompleted', (req, res) => {
+    db.get('tasks')
+    .remove({ completed: true })
+    .write();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(`{ "message": "All completed tasks were cleared"}`);
+});
+
 const server = http.createServer((req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Request-Method', '*');
+	res.setHeader('Access-Control-Allow-Methods', '*');
+	res.setHeader('Access-Control-Allow-Headers', '*');
     router(req, res, finalHandler(req, res));
 });
 
